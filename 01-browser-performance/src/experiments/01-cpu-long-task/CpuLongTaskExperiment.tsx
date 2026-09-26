@@ -7,6 +7,8 @@ import { resolveLookupLabel } from "./domain/lookup";
 import { sortCompanies } from "./domain/sorting";
 import type { Company, SearchCriteria } from "./domain/types";
 
+type DatasetSize = 250 | 500 | 1000 | 2000;
+
 const mediumFixture = createLookupFixture("medium");
 const largeFixture = createLookupFixture("large");
 const initialCriteria: SearchCriteria = {
@@ -71,11 +73,11 @@ function CompanyCard({
 }
 
 export function CpuLongTaskExperiment() {
-  const [datasetSize, setDatasetSize] = useState<250 | 500 | 1000>(500);
+  const [datasetSize, setDatasetSize] = useState<DatasetSize>(1000);
   const [taxonomySize, setTaxonomySize] = useState<"medium" | "large">("large");
   const [criteria, setCriteria] = useState<SearchCriteria>(initialCriteria);
   const [results, setResults] = useState<Company[]>(() =>
-    generateCompanies(500, largeFixture),
+    generateCompanies(1000, largeFixture),
   );
   const [lastDuration, setLastDuration] = useState<number | null>(null);
   const fixture = getFixture(taxonomySize);
@@ -88,7 +90,7 @@ export function CpuLongTaskExperiment() {
     setCriteria((current) => ({ ...current, [key]: value }));
   };
 
-  const updateDatasetSize = (nextSize: 250 | 500 | 1000) => {
+  const updateDatasetSize = (nextSize: DatasetSize) => {
     setDatasetSize(nextSize);
     setResults(generateCompanies(nextSize, getFixture(taxonomySize)));
     setLastDuration(null);
@@ -137,7 +139,7 @@ export function CpuLongTaskExperiment() {
           Reproduction steps
         </p>
         <ol>
-          <li>Select 500 or 1000 companies and Large taxonomy.</li>
+          <li>Select 1000 or 2000 companies and Large taxonomy.</li>
           <li>
             Enter <code>biopharma</code> in Search companies.
           </li>
@@ -155,7 +157,7 @@ export function CpuLongTaskExperiment() {
         <div className="control-groups">
           <fieldset>
             <legend>Dataset</legend>
-            {([250, 500, 1000] as const).map((size) => (
+            {([250, 500, 1000, 2000] as const).map((size) => (
               <label key={size}>
                 <input
                   checked={datasetSize === size}
