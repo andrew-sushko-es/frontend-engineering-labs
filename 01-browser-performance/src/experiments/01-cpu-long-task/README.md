@@ -14,7 +14,7 @@ From `01-browser-performance`, install dependencies and run `npm run dev`. Open 
 
 ## Reproduction Steps
 
-1. Select 500 or 1000 companies and Large taxonomy.
+1. Select 1000 companies (the default) or 2000 companies and Large taxonomy.
 2. Enter `biopharma` in Search companies.
 3. Select United States and the first therapeutic-area option.
 4. Enable Active only and choose Country sorting.
@@ -31,7 +31,7 @@ TODO: record the Apply Filters duration and the duration of the relevant main-th
 
 ## Benchmark Environment
 
-Chrome production build with 6× CPU slowdown, 500 or 1000 companies, and Large taxonomy.
+Chrome production build with 6× CPU slowdown, 1000 companies (or 2000 for a stronger trace), and Large taxonomy.
 
 ## Baseline Measurements
 
