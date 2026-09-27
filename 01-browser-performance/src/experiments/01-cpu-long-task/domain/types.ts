@@ -29,6 +29,10 @@ export type LookupBundle = {
   technologies: LookupNode[];
 };
 
+export type LookupIndexes = {
+  [Key in keyof LookupBundle]: Map<string, string>;
+};
+
 export type Choice = { id: string; name: string };
 
 export type SearchCriteria = {

@@ -1,25 +1,33 @@
-import { resolveLookupLabel } from "./lookup";
+import { resolveLookupLabelFromIndex } from "./lookup";
 import { normalizeSearchValue } from "./normalization";
-import type { Company, LookupBundle, SearchCriteria } from "./types";
+import type { Company, LookupIndexes, SearchCriteria } from "./types";
 
 export function matchesCompanyFilters(
   company: Company,
   criteria: SearchCriteria,
-  lookups: LookupBundle,
+  lookupIndexes: LookupIndexes,
 ) {
   const searchableValues = [
     company.name,
     company.description,
-    resolveLookupLabel(lookups.countries, company.countryId),
-    resolveLookupLabel(lookups.cities, company.cityId),
-    resolveLookupLabel(lookups.companyTypes, company.companyTypeId),
-    resolveLookupLabel(lookups.employeeRanges, company.employeeRangeId),
-    ...company.therapeuticAreaIds.map((id) =>
-      resolveLookupLabel(lookups.therapeuticAreas, id),
+    resolveLookupLabelFromIndex(lookupIndexes.countries, company.countryId),
+    resolveLookupLabelFromIndex(lookupIndexes.cities, company.cityId),
+    resolveLookupLabelFromIndex(
+      lookupIndexes.companyTypes,
+      company.companyTypeId,
     ),
-    ...company.serviceIds.map((id) => resolveLookupLabel(lookups.services, id)),
+    resolveLookupLabelFromIndex(
+      lookupIndexes.employeeRanges,
+      company.employeeRangeId,
+    ),
+    ...company.therapeuticAreaIds.map((id) =>
+      resolveLookupLabelFromIndex(lookupIndexes.therapeuticAreas, id),
+    ),
+    ...company.serviceIds.map((id) =>
+      resolveLookupLabelFromIndex(lookupIndexes.services, id),
+    ),
     ...company.technologyIds.map((id) =>
-      resolveLookupLabel(lookups.technologies, id),
+      resolveLookupLabelFromIndex(lookupIndexes.technologies, id),
     ),
   ];
   const normalizedSearch = normalizeSearchValue(criteria.searchText);
@@ -31,30 +39,39 @@ export function matchesCompanyFilters(
 
   const selectedCountry = criteria.countryId
     ? normalizeSearchValue(
-        resolveLookupLabel(lookups.countries, criteria.countryId),
+        resolveLookupLabelFromIndex(
+          lookupIndexes.countries,
+          criteria.countryId,
+        ),
       )
     : "";
   const countryMatches =
     !criteria.countryId ||
     normalizeSearchValue(
-      resolveLookupLabel(lookups.countries, company.countryId),
+      resolveLookupLabelFromIndex(lookupIndexes.countries, company.countryId),
     ) === selectedCountry;
 
   const selectedType = criteria.companyTypeId
     ? normalizeSearchValue(
-        resolveLookupLabel(lookups.companyTypes, criteria.companyTypeId),
+        resolveLookupLabelFromIndex(
+          lookupIndexes.companyTypes,
+          criteria.companyTypeId,
+        ),
       )
     : "";
   const typeMatches =
     !criteria.companyTypeId ||
     normalizeSearchValue(
-      resolveLookupLabel(lookups.companyTypes, company.companyTypeId),
+      resolveLookupLabelFromIndex(
+        lookupIndexes.companyTypes,
+        company.companyTypeId,
+      ),
     ) === selectedType;
 
   const selectedTherapeuticArea = criteria.therapeuticAreaId
     ? normalizeSearchValue(
-        resolveLookupLabel(
-          lookups.therapeuticAreas,
+        resolveLookupLabelFromIndex(
+          lookupIndexes.therapeuticAreas,
           criteria.therapeuticAreaId,
         ),
       )
@@ -64,7 +81,7 @@ export function matchesCompanyFilters(
     company.therapeuticAreaIds.some(
       (id) =>
         normalizeSearchValue(
-          resolveLookupLabel(lookups.therapeuticAreas, id),
+          resolveLookupLabelFromIndex(lookupIndexes.therapeuticAreas, id),
         ) === selectedTherapeuticArea,
     );
 
@@ -80,9 +97,9 @@ export function matchesCompanyFilters(
 export function filterCompanies(
   companies: Company[],
   criteria: SearchCriteria,
-  lookups: LookupBundle,
+  lookupIndexes: LookupIndexes,
 ) {
   return companies.filter((company) =>
-    matchesCompanyFilters(company, criteria, lookups),
+    matchesCompanyFilters(company, criteria, lookupIndexes),
   );
 }

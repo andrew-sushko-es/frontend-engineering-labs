@@ -1,4 +1,10 @@
-import type { Choice, LookupBundle, LookupNode } from "../domain/types";
+import { buildLookupIndex } from "../domain/lookup";
+import type {
+  Choice,
+  LookupBundle,
+  LookupIndexes,
+  LookupNode,
+} from "../domain/types";
 
 type Taxonomy = { tree: LookupNode[]; selectableIds: string[] };
 
@@ -82,6 +88,7 @@ function createSimpleLookups(): Pick<
 
 export type LookupFixture = {
   lookups: LookupBundle;
+  lookupIndexes: LookupIndexes;
   countryChoices: Choice[];
   companyTypeChoices: Choice[];
   therapeuticAreaChoices: Choice[];
@@ -127,13 +134,26 @@ export function createLookupFixture(size: "medium" | "large"): LookupFixture {
     name: `Therapeutic area ${fixtureTherapeuticAreaId.replace("therapy-", "").replaceAll("-", ".")}`,
   });
 
+  const lookups: LookupBundle = {
+    ...simple,
+    therapeuticAreas: therapeuticAreas.tree,
+    services: services.tree,
+    technologies: technologies.tree,
+  };
+
+  const lookupIndexes: LookupIndexes = {
+    countries: buildLookupIndex(lookups.countries),
+    cities: buildLookupIndex(lookups.cities),
+    companyTypes: buildLookupIndex(lookups.companyTypes),
+    employeeRanges: buildLookupIndex(lookups.employeeRanges),
+    therapeuticAreas: buildLookupIndex(lookups.therapeuticAreas),
+    services: buildLookupIndex(lookups.services),
+    technologies: buildLookupIndex(lookups.technologies),
+  };
+
   return {
-    lookups: {
-      ...simple,
-      therapeuticAreas: therapeuticAreas.tree,
-      services: services.tree,
-      technologies: technologies.tree,
-    },
+    lookups,
+    lookupIndexes,
     countryChoices,
     companyTypeChoices: typeChoices,
     therapeuticAreaChoices,

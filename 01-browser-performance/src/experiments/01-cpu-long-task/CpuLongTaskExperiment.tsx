@@ -105,7 +105,7 @@ export function CpuLongTaskExperiment() {
   const applyFilters = () => {
     const measurement = measureApplyFilters(() =>
       sortCompanies(
-        filterCompanies(companies, criteria, fixture.lookups),
+        filterCompanies(companies, criteria, fixture.lookupIndexes),
         criteria,
         fixture.lookups,
       ),
