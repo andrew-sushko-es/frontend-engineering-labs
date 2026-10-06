@@ -7,6 +7,10 @@ export function CompanyList() {
     companies,
     search,
     filters,
+    compactMode,
+    watchlist,
+    compareSelection,
+    selectedCompanyId,
     toggleWatchlist,
     toggleCompare,
     setSelectedCompanyId,
@@ -28,20 +32,20 @@ export function CompanyList() {
       </div>
       <div className="marketplace-company-grid">
         {visibleCompanies.map((company) => {
-          const displayMeta = {
-            location: `${company.city}, ${company.country}`,
-            verified: company.verified,
-            areas: company.therapeuticAreas.slice(0, 2),
-          };
-
+          const isWatchlisted = watchlist.has(company.id);
+          const isCompared = compareSelection.includes(company.id);
+          const isSelected = selectedCompanyId === company.id;
           return (
             <CompanyCard
               company={company}
-              displayMeta={displayMeta}
               key={company.id}
-              onCompare={() => toggleCompare(company.id)}
-              onSelect={() => setSelectedCompanyId(company.id)}
-              onWatchlist={() => toggleWatchlist(company.id)}
+              compactMode={compactMode}
+              isCompared={isCompared}
+              isSelected={isSelected}
+              isWatchlisted={isWatchlisted}
+              onCompare={toggleCompare}
+              onSelect={setSelectedCompanyId}
+              onWatchlist={toggleWatchlist}
             />
           );
         })}

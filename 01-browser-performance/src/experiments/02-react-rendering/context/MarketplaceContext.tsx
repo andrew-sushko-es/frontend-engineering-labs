@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { generateCompanies } from "../data/generateCompanies";
 import type { Company, MarketplaceFilters } from "../domain/company";
 import {
@@ -33,22 +33,22 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     setSelectedCompanyId(null);
   };
 
-  const toggleWatchlist = (companyId: string) => {
+  const toggleWatchlist = useCallback((companyId: string) => {
     setWatchlist((current) => {
       const next = new Set(current);
       if (next.has(companyId)) next.delete(companyId);
       else next.add(companyId);
       return next;
     });
-  };
+  }, []);
 
-  const toggleCompare = (companyId: string) => {
+  const toggleCompare = useCallback((companyId: string) => {
     setCompareSelection((current) =>
       current.includes(companyId)
         ? current.filter((id) => id !== companyId)
         : [...current, companyId],
     );
-  };
+  }, []);
 
   return (
     <MarketplaceContext.Provider
