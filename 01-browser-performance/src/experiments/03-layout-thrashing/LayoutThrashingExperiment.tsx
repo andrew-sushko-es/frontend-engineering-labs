@@ -27,7 +27,9 @@ function AnalyticsCard({ card }: { card: AnalyticsCardData }) {
           <p className="analytics-card-kicker">Portfolio account</p>
           <h3>{card.name}</h3>
         </div>
-        <span className={`analytics-status ${statusClassName}`}>{card.status}</span>
+        <span className={`analytics-status ${statusClassName}`}>
+          {card.status}
+        </span>
       </header>
 
       <p className="analytics-card-description">{card.summary}</p>
@@ -70,7 +72,10 @@ function AnalyticsCard({ card }: { card: AnalyticsCardData }) {
         </div>
       </div>
 
-      <div className="analytics-progress" aria-label={`${card.progress}% plan progress`}>
+      <div
+        className="analytics-progress"
+        aria-label={`${card.progress}% plan progress`}
+      >
         <span style={{ width: `${card.progress}%` }} />
       </div>
 
@@ -89,9 +94,14 @@ function AnalyticsCard({ card }: { card: AnalyticsCardData }) {
 export function LayoutThrashingExperiment() {
   const workspaceRef = useRef<HTMLDivElement>(null);
   const resultsPanelRef = useRef<HTMLElement>(null);
-  const dragRef = useRef<{ pointerId: number; startedAt: number; moveCount: number } | null>(null);
+  const dragRef = useRef<{
+    pointerId: number;
+    startedAt: number;
+    moveCount: number;
+  } | null>(null);
   const [cardCount, setCardCount] = useState<CardCount>(150);
-  const [lastResizeSession, setLastResizeSession] = useState<ResizeSession>(null);
+  const [lastResizeSession, setLastResizeSession] =
+    useState<ResizeSession>(null);
 
   const applyAdaptiveCardLayout = (resultsWidth: number) => {
     const resultsPanel = resultsPanelRef.current;
@@ -101,26 +111,45 @@ export function LayoutThrashingExperiment() {
 
     resultsPanel.style.flexBasis = `${resultsWidth}px`;
 
-    const cards = resultsPanel.querySelectorAll<HTMLElement>("[data-analytics-card]");
-    for (const card of cards) {
-      card.style.setProperty("--available-width", `${resultsWidth}px`);
-      const cardWidth = card.getBoundingClientRect().width;
-      const isCompact = cardWidth < 390;
-      card.classList.toggle("is-compact", isCompact);
+    // const cards = [
+    //   ...resultsPanel.querySelectorAll<HTMLElement>("[data-analytics-card]"),
+    // ];
 
-      const metrics = card.querySelector<HTMLElement>("[data-card-metrics]");
-      if (metrics) {
-        metrics.style.setProperty("--metric-columns", isCompact ? "2" : "4");
-        const metricsWidth = metrics.getBoundingClientRect().width;
-        metrics.classList.toggle("is-tight", metricsWidth < 325);
-      }
+    // for (const card of cards) {
+    //   card.style.setProperty("--available-width", `${resultsWidth}px`);
+    // }
 
-      const tags = card.querySelector<HTMLElement>("[data-card-tags]");
-      if (tags) {
-        const tagsWidth = tags.getBoundingClientRect().width;
-        tags.style.setProperty("--tag-columns", tagsWidth < 270 ? "2" : "3");
-      }
-    }
+    // const measurements = cards.map((card) => {
+    //   const metrics = card.querySelector<HTMLElement>("[data-card-metrics]");
+    //   const tags = card.querySelector<HTMLElement>("[data-card-tags]");
+
+    //   return {
+    //     card,
+    //     metrics,
+    //     tags,
+    //     cardWidth: card.getBoundingClientRect().width,
+    //     metricsWidth: metrics?.getBoundingClientRect().width,
+    //     tagsWidth: tags?.getBoundingClientRect().width,
+    //   };
+    // });
+
+    // for (const measurement of measurements) {
+    //   // calculate flags from captured dimensions
+    //   // apply classes / CSS custom properties
+    //   const { card, cardWidth, metrics, tags, metricsWidth, tagsWidth } =
+    //     measurement;
+    //   const isCompact = cardWidth < 390;
+    //   card.classList.toggle("is-compact", isCompact);
+
+    //   if (metrics && metricsWidth) {
+    //     metrics.style.setProperty("--metric-columns", isCompact ? "2" : "4");
+    //     metrics.classList.toggle("is-tight", metricsWidth < 325);
+    //   }
+
+    //   if (tags && tagsWidth) {
+    //     tags.style.setProperty("--tag-columns", tagsWidth < 270 ? "2" : "3");
+    //   }
+    // }
   };
 
   const resizeFromPointer = (clientX: number) => {
@@ -159,15 +188,22 @@ export function LayoutThrashingExperiment() {
     <div className="experiment-layout layout-thrashing-experiment">
       <section className="task-panel" aria-labelledby="layout-task-heading">
         <p className="section-label">Task</p>
-        <h2 id="layout-task-heading">Inspect a dense dashboard while it resizes</h2>
+        <h2 id="layout-task-heading">
+          Inspect a dense dashboard while it resizes
+        </h2>
         <p>
           Use the portfolio dashboard below to examine the browser work produced
           by a continuous panel resize.
         </p>
       </section>
 
-      <section className="reproduction-panel" aria-labelledby="layout-tools-heading">
-        <p className="section-label" id="layout-tools-heading">Suggested tools</p>
+      <section
+        className="reproduction-panel"
+        aria-labelledby="layout-tools-heading"
+      >
+        <p className="section-label" id="layout-tools-heading">
+          Suggested tools
+        </p>
         <ul>
           <li>Chrome Performance</li>
           <li>Rendering / FPS meter</li>
@@ -180,7 +216,10 @@ export function LayoutThrashingExperiment() {
         </ol>
       </section>
 
-      <section className="analytics-dashboard" aria-label="Portfolio analytics dashboard">
+      <section
+        className="analytics-dashboard"
+        aria-label="Portfolio analytics dashboard"
+      >
         <header className="analytics-toolbar">
           <div>
             <p className="section-label">Portfolio analytics</p>
@@ -206,16 +245,29 @@ export function LayoutThrashingExperiment() {
         </header>
 
         <div className="analytics-workspace" ref={workspaceRef}>
-          <aside className="analytics-summary" aria-label="Portfolio summary and filters">
+          <aside
+            className="analytics-summary"
+            aria-label="Portfolio summary and filters"
+          >
             <p className="section-label">Review context</p>
             <h3>Q4 forecast</h3>
             <p className="analytics-summary-copy">
-              24 accounts need a decision before the next regional forecast review.
+              24 accounts need a decision before the next regional forecast
+              review.
             </p>
             <dl className="analytics-summary-metrics">
-              <div><dt>Open pipeline</dt><dd>$4.8m</dd></div>
-              <div><dt>At-risk revenue</dt><dd>$820k</dd></div>
-              <div><dt>Coverage</dt><dd>3.2×</dd></div>
+              <div>
+                <dt>Open pipeline</dt>
+                <dd>$4.8m</dd>
+              </div>
+              <div>
+                <dt>At-risk revenue</dt>
+                <dd>$820k</dd>
+              </div>
+              <div>
+                <dt>Coverage</dt>
+                <dd>3.2×</dd>
+              </div>
             </dl>
             <div className="analytics-filter-list" aria-label="Applied filters">
               <span>Enterprise</span>
@@ -252,7 +304,11 @@ export function LayoutThrashingExperiment() {
             <span aria-hidden="true" />
           </div>
 
-          <section className="analytics-results-panel" ref={resultsPanelRef} aria-labelledby="analytics-results-heading">
+          <section
+            className="analytics-results-panel"
+            ref={resultsPanelRef}
+            aria-labelledby="analytics-results-heading"
+          >
             <header className="analytics-results-header">
               <div>
                 <p className="section-label">Results panel</p>
@@ -260,7 +316,8 @@ export function LayoutThrashingExperiment() {
               </div>
               {lastResizeSession && (
                 <p className="analytics-resize-session">
-                  Last resize: {(lastResizeSession.duration / 1000).toFixed(1)}s · {lastResizeSession.moveCount} moves
+                  Last resize: {(lastResizeSession.duration / 1000).toFixed(1)}s
+                  · {lastResizeSession.moveCount} moves
                 </p>
               )}
             </header>

@@ -638,12 +638,15 @@ select,
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
 }
 .analytics-card {
+  container-type: inline-size;
   --available-width: 720px;
   background: #fff;
   border: 1px solid #d6e1e9;
   border-radius: 8px;
   contain: none;
-  padding: clamp(13px, calc(var(--available-width) / 62), 22px);
+  padding: 16px;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 300px;
 }
 .analytics-card-header h3 {
   line-height: 1.25;
@@ -770,6 +773,32 @@ select,
 }
 .analytics-card.is-compact .analytics-card-metadata {
   gap: 7px;
+}
+@container (max-width: 390px) {
+  .analytics-card-description,
+  .analytics-card-update {
+    display: none;
+  }
+
+  .analytics-card-metadata {
+    gap: 7px;
+  }
+}
+
+@container (max-width: 325px) {
+  .analytics-card-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analytics-card-metrics strong {
+    font-size: 0.73rem;
+  }
+}
+
+@container (max-width: 270px) {
+  .analytics-tags {
+    grid-template-columns: repeat(2, max-content);
+  }
 }
 .company-card-heading {
   align-items: flex-start;
@@ -1870,10 +1899,9 @@ dd {
   border-bottom: 1px solid #e2eaf0;
   display: grid;
   gap: 16px;
-  grid-template-columns: minmax(210px, 1.3fr) minmax(125px, 0.8fr) minmax(
-      105px,
-      0.7fr
-    ) minmax(105px, 0.65fr) auto;
+  grid-template-columns:
+    minmax(210px, 1.3fr) minmax(125px, 0.8fr) minmax(105px, 0.7fr)
+    minmax(105px, 0.65fr) auto;
   padding: 16px 0;
 }
 .fleet-vehicle-row:last-child {
